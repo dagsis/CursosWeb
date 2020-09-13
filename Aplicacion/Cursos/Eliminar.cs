@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +30,19 @@ namespace Aplicacion.Cursos
 
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
+                var comentarios = this.context.Comentario.Where(x => x.CursoId == request.Id);
+                foreach (var comentario in comentarios)
+                {
+                    this.context.Comentario.Remove(comentario);
+                }
+
+                var precio = this.context.Precio.Where(x => x.CursoId == request.Id).FirstOrDefault();
+                if (precio != null)
+                {
+                    this.context.Remove(precio);
+                }
+
+
                 var instructoresDB = this.context.CursoInstructor.Where(x => x.CursoId == request.Id).ToList();
 
                 foreach (var instructorEliminar in instructoresDB)
