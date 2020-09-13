@@ -87,7 +87,8 @@ namespace Aplicacion.Seguridad
                     return new UsuarioData { 
                         NombreCompleto = usuario.NombreCompleto,
                         Token = this.jwtGenerador.CrearToken(usuario),
-                        UserName = usuario.UserName
+                        UserName = usuario.UserName,
+                        Email = usuario.Email
                     };
                 }
 

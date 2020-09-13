@@ -16,15 +16,15 @@ namespace WebApi.Controllers
     public class CursosController : MiControllerBase
     {       
         [HttpGet]       
-        public async Task<ActionResult<List<Curso>>> Get()
+        public async Task<ActionResult<List<CursoDTO>>> Get()
         {
             return await mediator.Send(new Consulta.ListaCurso());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Curso>> Detalle(int id)
+        public async Task<ActionResult<CursoDTO>> Detalle(Guid id)
         {
-            return await mediator.Send(new ConsultaId.CursoUnico{Id =id });
+            return await mediator.Send(new ConsultaId.CursoUnico{Id = id });
         }
 
         [HttpPost]
@@ -34,14 +34,14 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Unit>> Editar(int id,Editar.Ejecuta data)
+        public async Task<ActionResult<Unit>> Editar(Guid id, Editar.Ejecuta data)
         {
             data.CursoId = id;
             return await mediator.Send(data);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Eliminar(int id)
+        public async Task<ActionResult<Unit>> Eliminar(Guid id)
         {
             return await mediator.Send(new Eliminar.Ejecuta { Id = id });
         }

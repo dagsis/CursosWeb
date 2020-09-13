@@ -21,6 +21,8 @@ namespace Aplicacion.Cursos
             public string Titulo { get; set; }
             public string Descripcion { get; set; }
             public DateTime? FechaPublicacion { get; set; }
+            public List<Guid> ListaInstructor { get; set; }
+            public Precio Precio { get; set; }
             //public Byte[] FotoPortada { get; set; }
         }
 
@@ -45,14 +47,41 @@ namespace Aplicacion.Cursos
 
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
+                Guid cursoId = Guid.NewGuid();
+
                 var curso = new Curso
                 {
+                    CursoId = cursoId,
                     Titulo = request.Titulo,
                     Descripcion = request.Descripcion,
                     FechaPublicacion = request.FechaPublicacion 
                 };
 
                 context.Curso.Add(curso);
+
+                if (request.ListaInstructor != null)
+                {
+                    foreach (var id in request.ListaInstructor)
+                    {
+                        var cursoInstructor = new CursoInstructor
+                        {
+                            CursoId = cursoId,
+                            InstructorId = id
+                        };
+                        this.context.CursoInstructor.Add(cursoInstructor);
+                    }
+                }
+
+                var precio = new Precio
+                {
+                    CursoId = cursoId,
+                    PrecioId = Guid.NewGuid(),
+                    PrecioActual = request.Precio.PrecioActual,
+                    Promocion = request.Precio.Promocion
+                };
+
+                this.context.Precio.Add(precio);
+
                 var valor = await context.SaveChangesAsync();
                 if (valor > 0)
                 {

@@ -3,6 +3,7 @@ using MediatR;
 using Persistencia;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -14,7 +15,7 @@ namespace Aplicacion.Cursos
     {
         public class Ejecuta : IRequest
         {
-            public int Id { get; set; }
+            public Guid Id { get; set; }
         }
 
         public class Manejador : IRequestHandler<Ejecuta>
@@ -28,6 +29,13 @@ namespace Aplicacion.Cursos
 
             public async Task<Unit> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
+                var instructoresDB = this.context.CursoInstructor.Where(x => x.CursoId == request.Id).ToList();
+
+                foreach (var instructorEliminar in instructoresDB)
+                {
+                    this.context.CursoInstructor.Remove(instructorEliminar);
+                }
+
                 var curso = await context.Curso.FindAsync(request.Id);
                 if (curso == null)
                 {
