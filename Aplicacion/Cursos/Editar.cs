@@ -71,6 +71,16 @@ namespace Aplicacion.Cursos
                 {
                     precio.PrecioActual = request.Precio ?? precio.PrecioActual;
                     precio.Promocion = request.PrecioPromocion ?? precio.Promocion;
+                } else
+                {
+                    precio = new Precio
+                    {
+                        PrecioId = Guid.NewGuid(),
+                        PrecioActual = request.Precio ?? 0,
+                        Promocion = request.PrecioPromocion ?? 0,
+                        CursoId = curso.CursoId
+                    };
+                    this.context.Precio.Add(precio);
                 }
 
                 if (request.ListaInstructor != null)
