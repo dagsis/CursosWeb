@@ -16,9 +16,31 @@ namespace Persistencia.DapperConexion.Instructor
             this.factoriConexion = factoriConexion;
         }
 
-        public Task<int> Editar(InstructorModel parametros)
+        public async Task<int> Editar(Guid instructorId, string nombre, string apellido, string grado)
         {
-            throw new NotImplementedException();
+            var resultado = 0;
+
+            try
+            {
+                var connexion = this.factoriConexion.GetConnection();
+                resultado = await connexion.ExecuteAsync("usp_Instructor_editar", new
+                {
+                    InstructorId = instructorId,
+                    Nombre = nombre,
+                    Apellido = apellido,
+                    Grado = grado
+                }, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error en la edicion de datos", e);
+            }
+            finally
+            {
+                this.factoriConexion.CloseConexion();
+            }
+
+            return resultado;
         }
 
         public Task<int> Eliminar(Guid Id)
@@ -26,10 +48,34 @@ namespace Persistencia.DapperConexion.Instructor
             throw new NotImplementedException();
         }
 
-        public Task<int> Nuevo(InstructorModel parametros)
+        public async Task<int> Nuevo(string nombre,string apellido, string grado)
         {
-            throw new NotImplementedException();
+            var resultado  = 0;
+
+            try
+            {
+                var connexion = this.factoriConexion.GetConnection();
+                resultado = await   connexion.ExecuteAsync("usp_Instructor_nuevo", new
+                {
+                    InstructorId = Guid.NewGuid(),
+                    Nombre = nombre,
+                    Apellido =  apellido,
+                    Grado = grado
+                },commandType : CommandType.StoredProcedure);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error en el ingreso de datos", e);
+            }
+            finally
+            {
+                this.factoriConexion.CloseConexion();
+            }
+
+            return resultado;
+
         }
+
 
         public async Task<IEnumerable<InstructorModel>> ObtenerLista()
         {
