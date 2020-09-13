@@ -27,6 +27,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Persistencia;
+using Persistencia.DapperConexion;
+using Persistencia.DapperConexion.Instructor;
 using Seguridad.TokenSeguridad;
 using WebApi.Middleware;
 
@@ -48,6 +50,9 @@ namespace WebApi
             {
                 opt.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddOptions();
+            services.Configure<ConexionConfiguracion>(this.Configuration.GetSection("ConnectionStrings"));
 
             services.AddMediatR(typeof(Consulta.Manejador).Assembly);
             services.AddControllers(opt =>
@@ -79,6 +84,9 @@ namespace WebApi
             services.AddScoped<IJwtGenerador, JwtGenerador>();
             services.AddScoped<IUsuarioSesion, UsuarioSesion>();
             services.AddAutoMapper(typeof(Consulta.Manejador));
+
+            services.AddTransient<IFactoriConexion, FactoryConexion>();
+            services.AddScoped<IInstructor, InstructorRepository>();
 
         }
 
