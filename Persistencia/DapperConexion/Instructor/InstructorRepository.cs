@@ -43,9 +43,28 @@ namespace Persistencia.DapperConexion.Instructor
             return resultado;
         }
 
-        public Task<int> Eliminar(Guid Id)
+        public async Task<int> Eliminar(Guid Id)
         {
-            throw new NotImplementedException();
+            var resultado = 0;
+
+            try
+            {
+                var connexion = this.factoriConexion.GetConnection();
+                resultado = await connexion.ExecuteAsync("usp_Instructor_eliminar", new
+                {
+                    InstructorId = Id,
+                }, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error al elminar datos", e);
+            }
+            finally
+            {
+                this.factoriConexion.CloseConexion();
+            }
+
+            return resultado;
         }
 
         public async Task<int> Nuevo(string nombre,string apellido, string grado)
@@ -99,9 +118,32 @@ namespace Persistencia.DapperConexion.Instructor
             return instructorList;
         }
 
-        public Task<InstructorModel> ObtenerPorId(Guid Id)
+        public async Task<InstructorModel> ObtenerPorId(Guid Id)
         {
-            throw new NotImplementedException();
+            InstructorModel instructor = null;
+
+            var storeProcedure = "usp_obtener_Instructor_Id";
+            
+            try
+            {
+                var connexion = this.factoriConexion.GetConnection();
+                instructor = await connexion.QueryFirstAsync<InstructorModel> (storeProcedure
+                    , new
+                    {
+                       InstructorId = Id,                       
+                    }, commandType: CommandType.StoredProcedure);
+              
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error en la consulta de datos", e);
+            }
+            finally
+            {
+                this.factoriConexion.CloseConexion();
+            }
+
+            return instructor;
         }
     }
 }

@@ -17,7 +17,13 @@ namespace WebApi.Controllers
                 return await mediator.Send(new Consulta.ListaInstructores());
           }
 
-         [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<InstructorModel>> ObtenerInstructor(Guid id)
+        {
+            return await mediator.Send(new ConsultaId.Instructor { Id = id});
+        }
+
+        [HttpPost]
          public async Task<ActionResult<Unit>> Crear(Nuevo.Ejecuta data)
          {
             return await mediator.Send(data);
@@ -28,6 +34,12 @@ namespace WebApi.Controllers
         {
             data.InstructorId = id;
             return await mediator.Send(data);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Unit>> Eliminar(Guid id)
+        {
+            return await mediator.Send(new Eliminar.Ejecuta { Id = id });
         }
     }
 }
