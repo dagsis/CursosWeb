@@ -8,6 +8,8 @@ namespace Dominio
     {
         public Guid CursoId { get; set; }
         public Guid InstructorId { get; set; }
+        public DateTime? FechaCreacion { get; set; }
+
 
         public Curso Curso { get; set; }
         public Instructor Instructor { get; set; }

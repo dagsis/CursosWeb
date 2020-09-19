@@ -26,9 +26,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Persistencia;
 using Persistencia.DapperConexion;
 using Persistencia.DapperConexion.Instructor;
+using Persistencia.DapperConexion.Paginacion;
 using Seguridad.TokenSeguridad;
 using WebApi.Middleware;
 
@@ -87,7 +89,17 @@ namespace WebApi
 
             services.AddTransient<IFactoriConexion, FactoryConexion>();
             services.AddScoped<IInstructor, InstructorRepository>();
+            services.AddScoped<IPaginacion, PaginacionRepository>();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                     Title = "Servicios para mantenimientos de cursos",
+                     Version = "v1"
+                });
+                c.CustomSchemaIds(c => c.FullName);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,9 +120,17 @@ namespace WebApi
 
             app.UseAuthorization();
 
+
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cursos on line v1");
             });
         }
     }

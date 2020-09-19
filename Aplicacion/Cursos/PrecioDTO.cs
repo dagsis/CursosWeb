@@ -12,6 +12,8 @@ namespace Aplicacion.Cursos
 
         public decimal Promocion { get; set; }
 
+        public DateTime FechaCreacion { get; set; }
+
         public Guid CursoId { get; set; }
     }
 }

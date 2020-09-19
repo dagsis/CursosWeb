@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Persistencia.DapperConexion.Paginacion;
 
 namespace WebApi.Controllers
 {
@@ -19,6 +20,12 @@ namespace WebApi.Controllers
         public async Task<ActionResult<List<CursoDTO>>> Get()
         {
             return await mediator.Send(new Consulta.ListaCurso());
+        }
+
+        [HttpPost("report")]
+        public async Task<ActionResult<PaginacionModel>> Report(PaginacionCurso.Ejecuta data)
+        {
+            return await mediator.Send(data);
         }
 
         [HttpGet("{id}")]
