@@ -75,5 +75,11 @@ namespace WebApi.Controllers
             return await mediator.Send(new UsuarioRolTraer.Ejecuta {Username = username });
         }
 
+        [HttpPut("actualizarusuario")]
+        [Authorize]
+        public async Task<ActionResult<UsuarioData>> ActualizarUsuario(UsuarioActualizar.Ejecuta parametro)
+        {
+            return await mediator.Send(parametro);
+        }
     }
 }
