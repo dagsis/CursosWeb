@@ -82,11 +82,12 @@ namespace Aplicacion.Seguridad
                 };
 
                 var resultado = await this.userManager.CreateAsync(usuario, request.Password);
+
                 if (resultado.Succeeded)
                 {
                     return new UsuarioData { 
                         NombreCompleto = usuario.NombreCompleto,
-                        Token = this.jwtGenerador.CrearToken(usuario),
+                        Token = this.jwtGenerador.CrearToken(usuario, null),
                         UserName = usuario.UserName,
                         Email = usuario.Email
                     };

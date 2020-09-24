@@ -1,5 +1,6 @@
 ﻿using Aplicacion.Instructores;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistencia.DapperConexion.Instructor;
 using System;
@@ -11,11 +12,12 @@ namespace WebApi.Controllers
 {
     public class InstructoresController : MiControllerBase
     {
-          [HttpGet]
-          public async Task<ActionResult<List<InstructorModel>>> ObtenerInstructores()
-          {
-                return await mediator.Send(new Consulta.ListaInstructores());
-          }
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<ActionResult<List<InstructorModel>>> ObtenerInstructores()
+        {
+            return await mediator.Send(new Consulta.ListaInstructores());
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<InstructorModel>> ObtenerInstructor(Guid id)

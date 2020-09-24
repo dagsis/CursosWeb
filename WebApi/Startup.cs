@@ -65,8 +65,14 @@ namespace WebApi
 
             var builder = services.AddIdentityCore<Usuario>();
             var identityBuider = new IdentityBuilder(builder.UserType, builder.Services);
+
+            identityBuider.AddRoles<IdentityRole>();
+            identityBuider.AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<Usuario, IdentityRole>>();
+
             identityBuider.AddEntityFrameworkStores<CursosOnLineContext>();
+
             identityBuider.AddSignInManager<SignInManager<Usuario>>();
+
             services.TryAddSingleton<ISystemClock, SystemClock>();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Mi palabra secreta"));

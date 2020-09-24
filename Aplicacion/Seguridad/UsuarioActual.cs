@@ -33,11 +33,14 @@ namespace Aplicacion.Seguridad
             public async Task<UsuarioData> Handle(Ejecuta request, CancellationToken cancellationToken)
             {
                 var usuario = await this.userManager.FindByNameAsync(this.usuarioSesion.ObternerUsuarioSesion());
+                var resultadoRoles = await this.userManager.GetRolesAsync(usuario);
+                var listaRoles = new List<string>(resultadoRoles);
+
                 return new UsuarioData
                 {
                     NombreCompleto = usuario.NombreCompleto,
                     UserName = usuario.UserName,
-                    Token =  this.jwtGenerador.CrearToken(usuario),
+                    Token =  this.jwtGenerador.CrearToken(usuario, listaRoles),
                     Email = usuario.Email,
                     Imagen = null
                 };
